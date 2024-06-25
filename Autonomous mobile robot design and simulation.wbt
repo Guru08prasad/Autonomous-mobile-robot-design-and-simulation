@@ -1,0 +1,103 @@
+#VRML_SIM R2023b utf8
+
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackground.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/backgrounds/protos/TexturedBackgroundLight.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/objects/floors/protos/RectangleArena.proto"
+EXTERNPROTO "https://raw.githubusercontent.com/cyberbotics/webots/R2023b/projects/devices/sharp/protos/SharpGP2D120.proto"
+
+WorldInfo {
+}
+Viewpoint {
+  orientation -0.23060711415354654 0.14957641376330882 0.9614818018805559 2.026370469187793
+  position 192.34809740652867 -242.07158087222103 113.8115632256234
+}
+TexturedBackground {
+}
+TexturedBackgroundLight {
+}
+RectangleArena {
+  floorSize 500 500
+}
+Robot {
+  translation 0 0 7
+  rotation 1 0 0 -3.1411853071795863
+  children [
+    DEF Body Transform {
+      children [
+        DEF Body Shape {
+          appearance PBRAppearance {
+            baseColor 0 0 1
+            roughness 1
+            metalness 0
+          }
+          geometry Mesh {
+            url [
+              "../../../../Downloads/autonomous mobile robot 2 v1.obj"
+            ]
+          }
+        }
+      ]
+    }
+    DEF left_ds SharpGP2D120 {
+      translation 16 -5 1
+      rotation 1 0 0 3.14
+    }
+    DEF right_ds SharpGP2D120 {
+      translation 16 -11 1
+      rotation 1 0 0 3.14
+      name "Sharp's IR sensor GP2D120(1)"
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        anchor 1 2.5 3.5
+      }
+      device [
+        DEF right_motor RotationalMotor {
+        }
+      ]
+      endPoint Solid {
+        translation 1 2.5 3.5
+        rotation 1 0 0 1.57
+        children [
+          DEF wheel Shape {
+            appearance PBRAppearance {
+              baseColor 1 0 0
+              roughness 1
+              metalness 0
+            }
+            geometry Cylinder {
+              height 1.3
+              radius 3.5
+            }
+          }
+        ]
+        boundingObject USE wheel
+        physics DEF wheel_physics Physics {
+        }
+      }
+    }
+    HingeJoint {
+      jointParameters HingeJointParameters {
+        anchor 1 -13.5 3.8
+      }
+      device [
+        DEF left_motor RotationalMotor {
+        }
+      ]
+      endPoint Solid {
+        translation 1 -13.8 3.5
+        rotation 1 0 0 1.57
+        children [
+          USE wheel
+        ]
+        name "solid(1)"
+        boundingObject USE wheel
+        physics USE wheel_physics
+      }
+    }
+  ]
+  boundingObject USE Body
+  physics Physics {
+  }
+  controller "obstacle_avoidance"
+}
